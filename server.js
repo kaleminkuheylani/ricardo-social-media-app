@@ -24,6 +24,7 @@ app.use('/api/posts', require('./routes/posts'));
 app.use('/api/comments', require('./routes/comments'));
 app.use('/api/likes', require('./routes/likes'));
 app.use('/api/saved', require('./routes/savedPosts'));
+app.use('/api/auth', require('./routes/auth'));
 
 // Basic route
 app.get('/', (req, res) => {

@@ -27,6 +27,17 @@ const userSchema = new mongoose.Schema({
   phoneNumber: {
     type: String,
     required: false
+  },
+  avatarProfile: {
+    type: String,
+    required: true
+  },
+  refreshToken: {
+    type: String,
+    required: false
+  },
+  tokenVersion: {
+    type: String
   }
 }, {
   timestamps: true
