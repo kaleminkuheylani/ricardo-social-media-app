@@ -1,42 +1,44 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "cors";
+
+// TODO 1: Hazırladığın rota dosyalarını import et.
+import authRoutes from "./routes/usersRoutes.js";
+import postRoutes from "./routes/postsRoutes.js";
+
+dotenv.config();
 
 const app = express();
+
+// Middleware'ler
+app.use(express.json()); // JSON verilerini okumak için
+app.use(express.urlencoded({ extended: true }));
+app.use(cors()); // Güvenlik ayarı (Front-end'in bağlanması için)
+
+// ======================================================================
+// ROTALARI BAĞLA (MOUNTING ROUTES)
+// ======================================================================
+
+// TODO 2: Auth rotalarını '/api/auth' adresine bağla.
+app.use("/api/auth",authRoutes);
+
+// TODO 3: Post rotalarını '/api/posts' adresine bağla.
+app.use("/api/posts",postRoutes);
+
+
+// ======================================================================
+// VERİTABANI BAĞLANTISI VE SUNUCU BAŞLATMA
+// ======================================================================
+
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/social-media', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+// TODO 4: Mongoose ile veritabanına bağlan.
+// (İpucu: process.env.MONGO_URL kullanmalısın)
+const connectDB=await mongoose.connect(process.env.MONGODB_URI)
+.then(()=>console.log("sasa"))
+.catch((error) => console.log(`${error} - Bağlantı Hatası`));
+app.listen(PORT,()=>{
+    connectDB,
+    console.log(`The server is running${PORT}`)
 })
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log('MongoDB connection error:', err));
-
-// Routes
-app.use('/api/users', require('./routes/users'));
-app.use('/api/posts', require('./routes/posts'));
-app.use('/api/comments', require('./routes/comments'));
-app.use('/api/likes', require('./routes/likes'));
-app.use('/api/saved', require('./routes/savedPosts'));
-
-// Basic route
-app.get('/', (req, res) => {
-  res.json({ message: 'Social Media API Server is running!' });
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
-});
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
