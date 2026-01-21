@@ -27,7 +27,7 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "Bu kullanıcı zaten var." });
         }
 
-        // HATA DÜZELTME: 'await' eklendi.
+        // HATA DÜZELTMe:await' eklendi.
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // HATA DÜZELTME: 'User' modelini çağırırken 'new' keyword'ü veya create metodu.
